@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Population Vs Literacy rate Vs Tribal distribution in India</title>
+  <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.js'></script>
+  <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.18.0/mapbox-gl.css' rel='stylesheet'/>
+
+  <style>
+body { margin:0; padding:0; }
+h2, h3 {
+    margin: 10px;
+    font-size: 1.2em;
+}
+h3 {
+    font-size: 1em;
+}
+p {
+    font-size: 0.85em;
+    margin: 10px;
+    text-align: left;
+}
+/**
+* Create a position for the map
+* on the page */
+#map {
+    position:absolute;
+    top:0;
+    bottom:0;
+    width:100%;
+}
+/**
+* Set rules for how the map overlays
+* (info box and legend) will be displayed
+* on the page. */
+.map-overlay {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.8);
+    margin-right: 20px;
+    font-family: Arial, sans-serif;
+    overflow: auto;
+    border-radius: 3px;
+}
+#features {
+    top: 0;
+    height: 250px;
+    margin-top: 20px;
+    width: 250px;
+}
+#legend {
+    padding: 10px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.10);
+    line-height: 18px;
+    height: 100px;
+    margin-bottom: 40px;
+    width: 100px;
+}
+.legend-key {
+    display:inline-block;
+    border-radius: 20%;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+}
+
+</style>
+</head>
+
+<body>
+  <div id='map'></div>
+  <div class='map-overlay' id='features'><h2>Tribal Distribution Map</h2><p>Tribal distributions in different districts!</p>
+  <div id='info'></div>
+  <div id='links'>
+    <p>You can view choropleths for the following as well:</p>
+      <ul>
+      <li><a href="index.html">Population Map</a></li>
+      <li><a href="lit.html">Literacy rate map</a></li>
+      </ul>
+    </div>
+  </div>
+  
+  
+  <div class='map-overlay' id='legend'></div>
+
+  
+
+
+
+  <script>
+    mapboxgl.accessToken = 'pk.eyJ1Ijoic2Fpa2lhLWFiaGlzaGVrOCIsImEiOiJjaWtxbnF5MG8wMHVidTdra2J5MXJyMWVvIn0.yPOouitYbzDGHY1BpBZ0GQ';
+      var map = new mapboxgl.Map({
+      container: 'map', // container id
+      style: 'mapbox://styles/saikia-abhishek8/cio5gynzk009mbvm8jncjm83u'
+    });
+
+    var customLayers = ['0-20', '20-40', '40-60', '60-80', '80+' ];
+    map.on('load', function() {
+      customLayers.forEach(function (layer) {
+        console.log(map.getLayer(layer));
+      })
+    })
+    map.on('load', function() {
+        customLayers.forEach(function(layer) {;
+          var color = map.getPaintProperty(layer, 'fill-color');
+          var item = document.createElement('div');
+          var key = document.createElement('span');
+          key.className = 'legend-key';
+          key.style.backgroundColor = color;
+
+          var value = document.createElement('span');
+          value.innerHTML = layer;
+          item.appendChild(key);
+          item.appendChild(value);
+          legend.appendChild(item);
+          });
+      });
+
+      map.on('mousemove', function (e) {
+        var district = map.queryRenderedFeatures(e.point, {
+          layers: customLayers
+          });
+         
+      if (district.length > 0) {
+        
+       document.getElementById('info').innerHTML = "<h3><strong>" + district[0].properties.DISTRICT + "</strong></h3><p><strong><em>" + district[0].properties.ST_PER + "</strong> Tribal population in the district! </em></p>";
+     }
+      else {
+          document.getElementById('info').innerHTML = '<p>Hover over a district!</p>';
+          }
+});
+  
+
+      map.getCanvas().style.cursor = 'default';
+      map.fitBounds([[68.027344, 5.3757834], [97.382813, 35.550420]]);
+    </script>
+
+
+
+</body>
+</html>
+
+
+ 
